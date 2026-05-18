@@ -1,0 +1,10 @@
+- name: Setup Complete DevOps Environment
+  hosts: devops
+  become: yes
+
+  roles:
+    - common
+    - git
+    - docker
+    - kubernetes
+    - jenkins

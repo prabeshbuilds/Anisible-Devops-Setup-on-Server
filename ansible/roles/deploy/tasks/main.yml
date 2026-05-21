@@ -1,0 +1,12 @@
+- name: Copy project files
+  copy:
+    src: ../../
+    dest: /opt/devops-project/
+    owner: ubuntu
+    group: ubuntu
+    mode: '0755'
+
+- name: Run Docker Compose
+  command: docker-compose up -d
+  args:
+    chdir: /opt/devops-project/

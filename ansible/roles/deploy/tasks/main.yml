@@ -1,12 +1,24 @@
-- name: Copy project files
-  copy:
-    src: ../../
-    dest: /opt/devops-project/
-    owner: ubuntu
-    group: ubuntu
+---
+- name: Create deployment directory
+  ansible.builtin.file:
+    path: "{{ deploy_path }}"
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
     mode: '0755'
 
+- name: Copy project files
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/../"
+    dest: "{{ deploy_path }}/"
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: preserve
+    directory_mode: '0755'
+
 - name: Run Docker Compose
-  command: docker-compose up -d
+  ansible.builtin.command: /usr/local/bin/docker-compose up -d --build --remove-orphans
   args:
-    chdir: /opt/devops-project/
+    chdir: "{{ deploy_path }}/docker"
+  register: compose_up
+  changed_when: "'Started' in compose_up.stdout or 'Created' in compose_up.stdout or 'Recreated' in compose_up.stdout or 'Built' in compose_up.stdout"

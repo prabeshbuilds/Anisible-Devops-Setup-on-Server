@@ -1,6 +1,10 @@
 ---
-- hosts: devops
+- name: Provision Docker host and deploy the demo stack
+  hosts: devops
   become: true
+  vars:
+    app_user: ubuntu
+    deploy_path: /opt/devops-project
 
   roles:
     - docker

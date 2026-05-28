@@ -1,27 +1,39 @@
-version: "3.9"
-
 services:
-
   nodejs-app:
     build: ./node-app
+    container_name: devops-nodejs-app
     ports:
       - "3000:3000"
+    environment:
+      PORT: 3000
+    restart: unless-stopped
 
   python-app:
     build: ./python-app
+    container_name: devops-python-app
     ports:
       - "5000:5000"
+    environment:
+      PORT: 5000
+    restart: unless-stopped
 
   postgres:
     image: postgres:16
+    container_name: devops-postgres
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin123
-      POSTGRES_DB: devopsdb
+      POSTGRES_USER: ${POSTGRES_USER:-admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-admin123}
+      POSTGRES_DB: ${POSTGRES_DB:-devopsdb}
     ports:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
 
 volumes:
   postgres-data:

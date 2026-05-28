@@ -1,14 +1,21 @@
 ---
 - name: Install Docker dependencies
-  apt:
+  ansible.builtin.apt:
     name:
       - docker.io
       - python3-pip
+      - python3-docker
     state: present
     update_cache: yes
 
-- name: Start Docker
-  service:
+- name: Start and enable Docker
+  ansible.builtin.service:
     name: docker
     state: started
     enabled: yes
+
+- name: Allow deploy user to run Docker commands
+  ansible.builtin.user:
+    name: "{{ app_user }}"
+    groups: docker
+    append: yes

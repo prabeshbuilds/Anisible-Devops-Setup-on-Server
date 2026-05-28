@@ -1,0 +1,10 @@
+{
+  "name": "devops-nodejs-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Minimal Node.js service for the Ansible Docker deployment demo.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  }
+}
